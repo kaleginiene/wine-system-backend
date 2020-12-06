@@ -15,22 +15,24 @@ router.post("/register", middleware.validateRegistration, (req, res) => {
     `SELECT * FROM users WHERE username = '${username}'`,
     (err, result) => {
       if (err) {
-        res.status(400).json(err);
+        return res
+          .sendStatus(400)
+          .json({ msg: "Internal server error checking email validity" });
       } else if (result.length !== 0) {
         res.status(400).json({ msg: "The username already exists." });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
-            res.status(400).json(err);
+            res.sendStatus(400).json(err);
           } else {
             con.query(
               `INSERT INTO users (username, password, registration_date) VALUES ('${username}', '${hash}', now())`,
               (err, result) => {
                 if (err) {
-                  res.status(400).json(err);
+                  res.sendStatus(400).json({ msg: "Bad request" });
                 } else {
                   res
-                    .status(201)
+                    .sendStatus(201)
                     .json({ msg: "User has been registered successfully." });
                   console.log(result);
                 }
@@ -43,7 +45,7 @@ router.post("/register", middleware.validateRegistration, (req, res) => {
   );
 });
 
-router.get("/register", (req, res) => {
+router.get("/users", (req, res) => {
   con.query(`SELECT * FROM users`, (err, result) => {
     if (err) console.log(err);
     res.json(result);
