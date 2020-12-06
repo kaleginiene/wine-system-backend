@@ -152,7 +152,7 @@ router.post("/quantity", (req, res) => {
   );
 });
 
-router.post("/remove", middleware.isLoggedIn, (req, res) => {
+router.post("/decrease", middleware.isLoggedIn, (req, res) => {
   if (req.body.quantity > 0) {
     con.query(
       `UPDATE wine_types SET quantity=quantity-1 WHERE id = '${req.body.id}'`,
@@ -167,4 +167,13 @@ router.post("/remove", middleware.isLoggedIn, (req, res) => {
   }
 });
 
+router.post("/delete", (req, res) => {
+  con.query(
+    `DELETE from wine_types WHERE id = '${req.body.id}'`,
+    (err, result) => {
+      if (err) res.status(400).json(err);
+      res.status(201).json({ msg: "Deleted item from database successfully" });
+    }
+  );
+});
 module.exports = router;
