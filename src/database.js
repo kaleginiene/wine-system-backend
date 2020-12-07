@@ -10,7 +10,11 @@ const con = mysql.createConnection({
 });
 
 con.connect((err) => {
-  if (err) throw err;
+  if (err) {
+    console.log(err);
+    setTimeout(con, 2000);
+  }
+
   console.log("Successfully connected to database");
 });
 
