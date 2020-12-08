@@ -31,10 +31,10 @@ router.post("/register", middleware.validateRegistration, (req, res) => {
                 if (err) {
                   res.sendStatus(400).json({ msg: "Bad request" });
                 } else {
+                  console.log(result);
                   res
                     .sendStatus(201)
                     .json({ msg: "User has been registered successfully." });
-                  console.log(result);
                 }
               }
             );
