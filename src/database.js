@@ -22,8 +22,6 @@ con.connect((err) => {
         2000
       );
     }
-  } else if (err) {
-    console.log(err);
   } else {
     console.log("Successfully connected to database");
   }
