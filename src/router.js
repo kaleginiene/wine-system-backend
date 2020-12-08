@@ -19,7 +19,7 @@ router.post("/register", middleware.validateRegistration, (req, res) => {
           .sendStatus(400)
           .json({ msg: "Internal server error checking email validity" });
       } else if (result.length !== 0) {
-        res.status(400).json({ msg: "The username already exists." });
+        res.status(400).send({ msg: "The username already exists." });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {

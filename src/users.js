@@ -4,12 +4,16 @@ require("dotenv");
 module.exports = {
   validateRegistration: (req, res, next) => {
     if (!req.body.username || req.body.username.length < 6) {
-      return res.status(400).json({
-        msg: "Incorrect username. Username must containe 6 symbols or more",
+      return res.status(400).send({
+        msg: "Email do not follow the rules",
       });
     }
-    if (!req.body.password || req.body.password.length < 8) {
-      return res.status(400).json({
+    if (
+      !req.body.password ||
+      req.body.password.length < 8 ||
+      req.body.password.length > 64
+    ) {
+      return res.status(400).send({
         msg: "Incorrect password. Password must contain 8 symbols or more.",
       });
     }

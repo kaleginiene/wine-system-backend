@@ -12,17 +12,21 @@ const con = mysql.createConnection({
 con.connect((err) => {
   if (err) {
     console.log(err);
-    setTimeout(
-      con.connect((err) => {
-        if (err) {
-          console.log(err);
-        }
-      }),
-      2000
-    );
+    if (err.code === "ECONNRESET") {
+      setTimeout(
+        con.connect((err) => {
+          if (err) {
+            console.log(err);
+          }
+        }),
+        2000
+      );
+    }
+  } else if (err) {
+    console.log(err);
+  } else {
+    console.log("Successfully connected to database");
   }
-
-  console.log("Successfully connected to database");
 });
 
 module.exports = con;
