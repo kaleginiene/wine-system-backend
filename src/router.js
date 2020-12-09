@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mysql = require("mysql");
 const con = require("./database");
 const middleware = require("./users");
 const bcrypt = require("bcryptjs");
@@ -9,32 +10,39 @@ require("dotenv");
 //--------------AUTHORIZATION----------------------//
 
 router.post("/register", middleware.validateRegistration, (req, res) => {
-  const username = req.body.username.toLowerCase();
-
+  const username = req.body.username;
   con.query(
-    `SELECT * FROM users WHERE username = '${username}'`,
+    `SELECT * FROM users WHERE username = ${mysql.escape(username)}`,
     (err, result) => {
       if (err) {
+        console.log(err);
         return res
-          .sendStatus(400)
-          .json({ msg: "Internal server error checking email validity" });
+          .status(400)
+          .json({ msg: "Internal server error checking username validity" });
       } else if (result.length !== 0) {
-        res.status(400).send({ msg: "The username already exists." });
+        return res.status(400).json({ msg: "This username already exists" });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
-            res.sendStatus(400).json(err);
+            console.log(err);
+            return res.status(400).json({
+              msg: "Internal server error hashing user details",
+            });
           } else {
             con.query(
-              `INSERT INTO users (username, password, registration_date) VALUES ('${username}', '${hash}', now())`,
+              `INSERT INTO users (username, password) VALUES (${mysql.escape(
+                username
+              )}, ${mysql.escape(hash)})`,
               (err, result) => {
                 if (err) {
-                  res.sendStatus(400).json({ msg: "Bad request" });
+                  console.log(err);
+                  return res.status(400).json({
+                    msg: "Internal server error saving user details",
+                  });
                 } else {
-                  console.log(result);
-                  res
-                    .sendStatus(201)
-                    .json({ msg: "User has been registered successfully." });
+                  return res.status(201).json({
+                    msg: "User has been successfully registered",
+                  });
                 }
               }
             );
