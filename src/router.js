@@ -162,7 +162,7 @@ router.post("/quantity", (req, res) => {
   );
 });
 
-router.post("/decrease", middleware.isLoggedIn, (req, res) => {
+router.post("/decrease", (req, res) => {
   if (req.body.quantity > 0) {
     con.query(
       `UPDATE wine_types SET quantity=quantity-1 WHERE id = '${req.body.id}'`,
