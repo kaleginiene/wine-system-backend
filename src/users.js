@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-require("dotenv");
+require("dotenv").config();
 
 module.exports = {
   validateRegistration: (req, res, next) => {
