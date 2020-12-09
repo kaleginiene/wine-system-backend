@@ -181,7 +181,7 @@ router.post("/quantity", (req, res) => {
           res.sendStatus(400).json(err);
         } else {
           database((db) => {
-            con.query(
+            db.query(
               `UPDATE wine_types SET quantity=IFNULL(quantity, 0)+'${req.body.quantity}' WHERE id = '${req.body.id}'`,
               (err, result) => {
                 if (err) res.sendStatus(400).json(err);
